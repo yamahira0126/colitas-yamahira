@@ -1,0 +1,12 @@
+[Unit]
+Description=Inotify Service
+After=network.target
+
+[Service]
+User=admin
+ExecStart=sudo /bin/bash /usr/local/src/himo/Inotify.sh
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

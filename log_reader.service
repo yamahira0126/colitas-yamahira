@@ -1,0 +1,10 @@
+[Unit]
+Description=Run log_reader script every 2 seconds
+
+[Service]
+Type=simple
+User=admin
+ExecStart=/bin/bash -c 'while true; do /usr/bin/python3 /usr/local/src/himo/log_reader.py; sleep 2; done'
+
+[Install]
+WantedBy=multi-user.target

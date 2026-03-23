@@ -1,0 +1,6 @@
+<P>upload.html
+<form method="POST" action="http://b2200520.cloud.fml.org/api/upload/v1" enctype="multipart/form-data">
+  <P>file
+    <input name="file"  type="file">
+  <input type="submit" value="submit">
+</form>

@@ -1,0 +1,5 @@
+mkdir -p ./htdocs/
+curl -o /home/admin/www.py https://raw.githubusercontent.com/Karutoo/files2024/main/AIwww
+curl -o /home/admin/htdocs/upload.html https://raw.githubusercontent.com/Karutoo/files2024/main/AIupload
+curl -o /home/admin/rekognition.py http://api.fml.org/dist/rekognition.py
+sudo apt install python3-boto3
