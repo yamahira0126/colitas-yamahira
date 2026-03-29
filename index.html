@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>コマンド作成</title>
     <style>
@@ -8,40 +9,51 @@
             text-align: center;
             background-color: #f2f2f2;
         }
+
         h1 {
             color: #333;
         }
+
         label {
             font-weight: bold;
-            user-select: none; /* ドラッグ不可にする */
+            user-select: none;
+            /* ドラッグ不可にする */
         }
+
         #inputValue {
             padding: 5px;
             margin: 10px;
         }
+
         #password {
             padding: 5px;
             margin: 10px;
         }
+
         #confirmPassword {
             padding: 5px;
             margin: 10px;
         }
+
         #ipaddr {
             padding: 5px;
             margin: 10px;
         }
+
         #displayURL {
             font-size: 18px;
             margin: 10px;
         }
+
         #errorText {
             color: red;
             font-size: 16px;
         }
+
         .hidden {
             display: none;
         }
+
         button {
             background-color: #007bff;
             color: #fff;
@@ -50,21 +62,31 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
+
         button:hover {
             background-color: #0056b3;
         }
+
         .noselect {
-            user-select: none; /* ドラッグ不可にする */
+            user-select: none;
+            /* ドラッグ不可にする */
         }
+
         .responsive-gif {
-            max-width: 80%; /* 横幅に合わせるための設定 */
+            max-width: 80%;
+            /* 横幅に合わせるための設定 */
             height: auto;
         }
+
         #usageText {
-            font-size: 20px; /* テキストのフォントサイズ */
-            font-weight: bold; /* テキストの太字 */
-            color: #007bff; /* テキストのカラー */
-            margin-top: 20px; /* 上部のマージンを設定して適切な間隔を確保 */
+            font-size: 20px;
+            /* テキストのフォントサイズ */
+            font-weight: bold;
+            /* テキストの太字 */
+            color: #007bff;
+            /* テキストのカラー */
+            margin-top: 20px;
+            /* 上部のマージンを設定して適切な間隔を確保 */
         }
     </style>
     <script>
@@ -76,7 +98,7 @@
 
         //     if (/^b\d{7}$/.test(inputValue)) {
         //         errorText.textContent = ''; // エラーメッセージをクリア
-        //         var url = 'curl -fsSL https://sh.himohimo.workers.dev/?name=' + inputValue + " | sh";
+        //         var url = 'curl -fsSL https://sh.yamahira.workers.dev/?name=' + inputValue + " | sh";
         //         displayURL.textContent = url;
         //         copyButton.classList.remove('hidden'); // コピーのボタンを表示
         //     } else {
@@ -121,8 +143,7 @@
 
             // 全ての入力条件を満たしている場合
             errorText.textContent = '';
-            var url = "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null admin@" + ipaddr + " -i ~/.ssh/labsuser.pem -t 'curl -fsSL https://sh.himohimo.workers.dev/?name=" + inputValue + '\\&password=' + password + " | sh'"
-            // var url = 'curl -fsSL https://sh.himohimo.workers.dev/?name=' + inputValue + '&ipaddr=' + ipaddr + '&password=' + password + " | sh";
+            var url = "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null admin@" + ipaddr + " -i ~/.ssh/labsuser.pem -t 'curl -fsSL https://sh.yamahira.workers.dev/?name=" + inputValue + '\\&password=' + password + " | sh'"
             displayURL.textContent = url;
             copyButton.classList.remove('hidden');
         }
@@ -139,6 +160,7 @@
         }
     </script>
 </head>
+
 <body>
     <h1>コマンド作成</h1>
     <label for="inputValue" class="noselect">学籍番号を入力してください:</label>
@@ -162,6 +184,10 @@
 
     <!-- <p id="usageText" class="noselect">使い方</p>
     <img src="./how2.gif" alt="GIF animation" class="responsive-gif" /> -->
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/1pQn8NIo99Q?si=Mbs2jwJtbJNtUBx2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/1pQn8NIo99Q?si=Mbs2jwJtbJNtUBx2"
+        title="YouTube video player" frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </body>
+
 </html>
