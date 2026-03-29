@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 User=admin
-ExecStart=sudo /bin/bash /usr/local/src/himo/Inotify.sh
+ExecStart=sudo /bin/bash /usr/local/src/yamahira/Inotify.sh
 Restart=always
 RestartSec=2
 

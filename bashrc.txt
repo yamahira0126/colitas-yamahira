@@ -2,6 +2,7 @@ GlobalIP=$(curl -s https://ifconfig.me)
 if [[ ! "$GlobalIP" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
   GlobalIP="1.1.1.1"
 fi
+BASE_DIR="/usr/local/src/yamahira"
 #export PS1='\033[01;32m\u\033[00m(\033[01;30m$GlobalIP\033[00m):\033[01;34m\w\033[00m $ '
 export PS1='\[\033[01;32m\]\u\[\033[00m\](\[\033[01;30m\]$GlobalIP\[\033[00m\]):\[\033[01;34m\]\w\[\033[00m\] $ '
 
@@ -10,14 +11,14 @@ NOW_PROCESS=$(ps -p $PPID -o comm | awk 'END{print $0}')
 # スクリプトではない(ttyd,sshd)だったら
 if [ $NOW_PROCESS != "script" ]; then
   export typescriptID=$$
-  script -f /usr/local/src/himo/typescript_$$
+  script -f "${BASE_DIR}/typescript_$$"
   exit
 else #スクリプトだったら
   thisPID=$typescriptID
-  /usr/local/bin/tscat --time --visible /usr/local/src/himo/typescript_$typescriptID >> /var/colitas/tslog.$typescriptID.txt 2>/dev/null &
+  /usr/local/bin/tscat --time --visible "${BASE_DIR}/typescript_$typescriptID" >> /var/colitas/tslog.$typescriptID.txt 2>/dev/null &
 fi
 
-username=$(< /usr/local/src/himo/username.txt)
+username=$(< "${BASE_DIR}/username.txt")
 kugiri=@w@a@w@
 kugiri2=@c@w@c@
 flag=0
@@ -29,20 +30,24 @@ function __accept-line() {
       READLINE_POINT=${#READLINE_LINE}
       #echo "[INFO] 複数行コマンド検出 → 1行目のみ実行: $READLINE_LINE"
     fi
-    local log_file=/usr/local/src/himo/lastcommand_$$
+    local command_array=($READLINE_LINE)
+    local BaseCommand=${command_array[0]}
+    local Command="$READLINE_LINE"
+    local log_file="${BASE_DIR}/lastcommand_$$"
     unique_id=$(uuidgen)
-    local uuid_file=/usr/local/src/himo/lastuuid_$$
+    local uuid_file="${BASE_DIR}/lastuuid_$$"
     # UUID をログファイルに書き込む
     echo "$unique_id" > "$uuid_file"
-    echo "" >/usr/local/src/himo/typescript_$$
+    echo "" >"${BASE_DIR}/typescript_$$"
     {
        echo -n "TimeStamp${kugiri2}$(date "+%Y%m%d%H%M%S")${kugiri}"
        echo -n "StudentID${kugiri2}$username${kugiri}"
        echo -n "GlobalIP${kugiri2}$GlobalIP${kugiri}"
        echo -n "CurrentDir${kugiri2}${PWD}${kugiri}"
-       echo -n "Command${kugiri2}$READLINE_LINE${kugiri}"
+       echo -n "BaseCommand${kugiri2}$BaseCommand${kugiri}"
+       echo -n "Command${kugiri2}$Command${kugiri}"
     } >${log_file}
-    python3 /usr/local/src/himo/command_logger.py $thisPID $unique_id $$
+    python3 "${BASE_DIR}/command_logger.py" $thisPID $unique_id $$
     flag=1
   else
     flag=0
@@ -58,14 +63,14 @@ bind '"\C-m": "\1299\1298"'
 function log_command() {
     local exit_code=$?
     sleep 0.3
-    local log_file=/usr/local/src/himo/lastcommand_$$
-    local uuid_file=/usr/local/src/himo/lastuuid_$$
+    local log_file="${BASE_DIR}/lastcommand_$$"
+    local uuid_file="${BASE_DIR}/lastuuid_$$"
     if [ $flag -eq 1 ]; then
         echo -n "ExitCode${kugiri2}$exit_code" >>${log_file}
         local uuid=$(cat "$uuid_file" | tr -d '\n')
-        python3 /usr/local/src/himo/command_logger.py $thisPID $uuid $$ ${PWD}
+        python3 "${BASE_DIR}/command_logger.py" $thisPID $uuid $$ ${PWD}
         #echo "$command"
     fi
 }
-echo $$ > /usr/local/src/himo/passd
+echo $$ > "${BASE_DIR}/passd"
 PROMPT_COMMAND="log_command"

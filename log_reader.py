@@ -4,13 +4,32 @@ import subprocess
 import json
 
 LOG_FILE = "/tmp/www.py-httplog"
-USERNAME_FILE = "/usr/local/src/himo/username.txt"
-POST_URL = "https://supapush2.himohimo.workers.dev/"
-HEADERS = {
-    'Content-Type': 'application/json',
-    'table': 'rest',  # テーブル名を 'rest' に変更
-    'type': 'POST'
-}
+BASE_DIR = "/usr/local/src/yamahira"
+USERNAME_FILE = f"{BASE_DIR}/username.txt"
+ENV_FILE = f"{BASE_DIR}/colitas.env"
+
+def load_env_file(path):
+    env = {}
+    if not os.path.exists(path):
+        return env
+
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            if "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            env[key.strip()] = value.strip()
+    return env
+
+env = load_env_file(ENV_FILE)
+
+SUPABASE_URL = env.get("SUPABASE_URL", "").rstrip("/")
+SUPABASE_APIKEY = env.get("SUPABASE_APIKEY", "")
+SUPABASE_JWT = env.get("SUPABASE_JWT", "")
+REST_TABLE_URL = f"{SUPABASE_URL}/rest/v1/rest"
 
 def get_student_id():
     """
@@ -34,8 +53,8 @@ def post_log_data(time, command, path, status_code, remote_ip, directory, studen
     try:
         # データを辞書としてまとめる
         data = {
-            "time": time,
-            "command": command,
+            "request_time": time,
+            "method": command,
             "url_path": path,
             "status_code": status_code,
             "remote_ip": remote_ip,
@@ -46,10 +65,11 @@ def post_log_data(time, command, path, status_code, remote_ip, directory, studen
         data_json = json.dumps(data)
         # curlを使ってPOSTリクエストを送信
         cmd = [
-            'curl', '-X', 'POST', POST_URL,
+            'curl', '-k', '-X', 'POST', REST_TABLE_URL,
+            '-H', f'apikey: {SUPABASE_APIKEY}',
+            '-H', f'Authorization: Bearer {SUPABASE_JWT}',
             '-H', 'Content-Type: application/json',
-            '-H', 'table: rest',
-            '-H', 'type: POST',
+            '-H', 'Prefer: return=minimal',
             '-d', data_json
         ]
         # コマンド実行

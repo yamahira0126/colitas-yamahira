@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 WorkingDirectory=/home/admin
-ExecStart=/usr/local/src/himo/cttyd.sh
+ExecStart=/usr/local/src/yamahira/cttyd.sh
 User=admin
 
 [Install]

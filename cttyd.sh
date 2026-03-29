@@ -1,11 +1,13 @@
 #!/bin/bash
 
+BASE_DIR="/usr/local/src/yamahira"
+
 # ユーザー名とパスワードを読み取る
-USERNAME=$(cat /usr/local/src/himo/username.txt)
-PASSWORD=$(cat /usr/local/src/himo/password.txt)
+USERNAME=$(cat "${BASE_DIR}/username.txt")
+PASSWORD=$(cat "${BASE_DIR}/password.txt")
 cd /home/admin
 
-directory="/usr/local/src/himo/key"
+directory="${BASE_DIR}/key"
 
 rm -r "$directory"/*
 
@@ -14,7 +16,7 @@ rm -r "$directory"/*
 if [ ! -d "$directory" ]; then
     mkdir "$directory"
 fi
-curl -o /usr/local/src/himo/key/pubkey.zip https://api.fml.org/dist/pubkey.zip
-unzip -d /usr/local/src/himo/key -P QOL2024nasuno /usr/local/src/himo/key/pubkey.zip
+curl -o "${BASE_DIR}/key/pubkey.zip" https://api.fml.org/dist/pubkey.zip
+unzip -d "${BASE_DIR}/key" -P QOL2024nasuno "${BASE_DIR}/key/pubkey.zip"
 # ttyd を実行する
-/usr/local/bin/ttyd -W -p 443 --ssl --ssl-cert /usr/local/src/himo/key/fullchain3.pem --ssl-key /usr/local/src/himo/key/privkey3.pem -c "$USERNAME:$PASSWORD" bash
+/usr/local/bin/ttyd -W -p 443 --ssl --ssl-cert "${BASE_DIR}/key/fullchain3.pem" --ssl-key "${BASE_DIR}/key/privkey3.pem" -c "$USERNAME:$PASSWORD" bash

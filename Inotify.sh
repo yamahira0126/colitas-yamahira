@@ -1,7 +1,35 @@
 #!/bin/bash
 
+BASE_DIR="/usr/local/src/yamahira"
+ENV_FILE="${BASE_DIR}/colitas.env"
+
+load_env_file() {
+    if [ ! -f "$1" ]; then
+        return
+    fi
+
+    while IFS= read -r line; do
+        line="${line#"${line%%[![:space:]]*}"}"
+        line="${line%"${line##*[![:space:]]}"}"
+        if [ -z "$line" ] || [[ "$line" == \#* ]] || [[ "$line" != *=* ]]; then
+            continue
+        fi
+
+        key="${line%%=*}"
+        value="${line#*=}"
+        key="${key%"${key##*[![:space:]]}"}"
+        value="${value#"${value%%[![:space:]]*}"}"
+        value="${value%"${value##*[![:space:]]}"}"
+        printf -v "$key" '%s' "$value"
+    done < "$1"
+}
+
+load_env_file "$ENV_FILE"
+
+SUPABASE_URL="${SUPABASE_URL%/}"
+
 # 環境変数から student_id を取得
-student_id_file="/usr/local/src/himo/username.txt"
+student_id_file="${BASE_DIR}/username.txt"
 if [ -f "$student_id_file" ]; then
     student_id=$(<"$student_id_file")
 else
@@ -35,17 +63,22 @@ while read -r event file name; do
     fi
 
     data='{
-        "type": "'$type'",
+        "student_id": "'$student_id'",
+        "event_type": "'$type'",
         "path": "'$full_path'",
-        "dir": '$is_dir',
-        "StudentID": "'$student_id'"
+        "is_dir": '$is_dir'
     }'
     #echo $data
-    curl -X POST 'https://supapush2.himohimo.workers.dev/' -H 'Content-Type: application/json' -H 'table: files' -d "$data"
+    curl -k -X POST "${SUPABASE_URL}/rest/v1/files" \
+        -H "apikey: ${SUPABASE_APIKEY}" \
+        -H "Authorization: Bearer ${SUPABASE_JWT}" \
+        -H "Content-Type: application/json" \
+        -H "Prefer: return=minimal" \
+        -d "$data"
 
     # イベントがMODIFYの場合、ファイルを比較し差分情報をDBに送信
     if [ "$event_type" == "MODIFY" ] || [ "$event_type" == "MOVED_FROM" ] || [ "$event_type" == "CREATE" ]; then
-        modified_full_path="${full_path//\/home\/admin/\/usr\/local\/src\/himo\/admin}"
+        modified_full_path="${full_path//\/home\/admin/\/usr\/local\/src\/yamahira\/admin}"
         directory=$(dirname "$modified_full_path")
         mkdir -p "$directory"
         if [ -e "$modified_full_path" ]; then
@@ -56,7 +89,7 @@ while read -r event file name; do
             echo "File not found: $modified_full_path"
             # 例えば、変数を別の値に設定する場合
             #modified_full_path="/some/other/path"
-            diff_output=$(diff "/usr/local/src/himo/planetxt.txt" "$full_path")
+            diff_output=$(diff "${BASE_DIR}/planetxt.txt" "$full_path")
         fi
 
         #diff_output=$(diff "$modified_full_path" "$full_path")
@@ -68,7 +101,7 @@ while read -r event file name; do
         echo "eve"
         echo $event_type:$full_path
         if [ "$diff_output" == "" ]; then
-            rsync -az --delete --exclude='/.*/' "$full_path" "/usr/local/src/himo/admin$modified_full_path"
+            rsync -az --delete --exclude='/.*/' "$full_path" "${BASE_DIR}/admin$modified_full_path"
             continue
         fi
         escaped_diff=$(echo "$diff_output" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' -e ':a' -e 'N' -e '$!ba' -e 's/\n/\\n/g' -e 's/\\\([^n]\|$\)/^\\\\/g')
@@ -76,14 +109,19 @@ while read -r event file name; do
         escaped_diff="${escaped_diff//\"/\\\"}"
         data2='{
             "path": "'$full_path'",
-            "diff": "'$escaped_diff'",
-            "StudentID": "'$student_id'"
+            "diff_text": "'$escaped_diff'",
+            "student_id": "'$student_id'"
         }'
-        curl -X POST 'https://supapush2.himohimo.workers.dev/' -H 'Content-Type: application/json' -H 'table: diff' -d "$data2"
+        curl -k -X POST "${SUPABASE_URL}/rest/v1/diff" \
+            -H "apikey: ${SUPABASE_APIKEY}" \
+            -H "Authorization: Bearer ${SUPABASE_JWT}" \
+            -H "Content-Type: application/json" \
+            -H "Prefer: return=minimal" \
+            -d "$data2"
     fi
 
 
 
     # どのようなイベントであってもrsyncでファイルを同期
-    rsync -az --delete --exclude='/.*/' "$full_path" "/usr/local/src/himo/admin$modified_full_path"
+    rsync -az --delete --exclude='/.*/' "$full_path" "${BASE_DIR}/admin$modified_full_path"
 done
