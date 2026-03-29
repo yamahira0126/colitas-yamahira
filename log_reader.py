@@ -4,7 +4,7 @@ import subprocess
 import json
 
 LOG_FILE = "/tmp/www.py-httplog"
-BASE_DIR = "/usr/local/src/yamahira"
+BASE_DIR = "/usr/local/src/himo"
 USERNAME_FILE = f"{BASE_DIR}/username.txt"
 ENV_FILE = f"{BASE_DIR}/colitas.env"
 

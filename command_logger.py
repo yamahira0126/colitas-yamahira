@@ -6,7 +6,7 @@ import subprocess
 
 PID = sys.argv[1]
 result = ""
-BASE_DIR = "/usr/local/src/yamahira"
+BASE_DIR = "/usr/local/src/himo"
 ENV_FILE = f"{BASE_DIR}/colitas.env"
 
 def load_env_file(path):

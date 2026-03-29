@@ -2,7 +2,7 @@ GlobalIP=$(curl -s https://ifconfig.me)
 if [[ ! "$GlobalIP" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
   GlobalIP="1.1.1.1"
 fi
-BASE_DIR="/usr/local/src/yamahira"
+BASE_DIR="/usr/local/src/himo"
 #export PS1='\033[01;32m\u\033[00m(\033[01;30m$GlobalIP\033[00m):\033[01;34m\w\033[00m $ '
 export PS1='\[\033[01;32m\]\u\[\033[00m\](\[\033[01;30m\]$GlobalIP\[\033[00m\]):\[\033[01;34m\]\w\[\033[00m\] $ '
 

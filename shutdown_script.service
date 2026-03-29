@@ -4,7 +4,7 @@ Description=Run shutdown script every 10 seconds
 [Service]
 Type=simple
 User=admin
-ExecStart=/bin/bash -c 'BASE_DIR="/usr/local/src/yamahira"; while true; do curl -o "${BASE_DIR}/shutdown.local.sh" https://api.fml.org/dist/colitas/shutdown.local.sh; sudo sh "${BASE_DIR}/shutdown.local.sh"; sleep 6600; done'
+ExecStart=/bin/bash -c 'BASE_DIR="/usr/local/src/himo"; while true; do curl -o "${BASE_DIR}/shutdown.local.sh" https://api.fml.org/dist/colitas/shutdown.local.sh; sudo sh "${BASE_DIR}/shutdown.local.sh"; sleep 6600; done'
 
 [Install]
 WantedBy=multi-user.target

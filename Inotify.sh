@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BASE_DIR="/usr/local/src/yamahira"
+BASE_DIR="/usr/local/src/himo"
 ENV_FILE="${BASE_DIR}/colitas.env"
 
 load_env_file() {

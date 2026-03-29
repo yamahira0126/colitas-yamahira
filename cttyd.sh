@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BASE_DIR="/usr/local/src/yamahira"
+BASE_DIR="/usr/local/src/himo"
 
 # ユーザー名とパスワードを読み取る
 USERNAME=$(cat "${BASE_DIR}/username.txt")
