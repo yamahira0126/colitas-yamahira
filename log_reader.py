@@ -65,7 +65,7 @@ def post_log_data(time, command, path, status_code, remote_ip, directory, studen
         data_json = json.dumps(data)
         # curlを使ってPOSTリクエストを送信
         cmd = [
-            'curl', '-k', '-X', 'POST', REST_TABLE_URL,
+            'curl', '-X', 'POST', REST_TABLE_URL,
             '-H', f'apikey: {SUPABASE_APIKEY}',
             '-H', f'Authorization: Bearer {SUPABASE_JWT}',
             '-H', 'Content-Type: application/json',

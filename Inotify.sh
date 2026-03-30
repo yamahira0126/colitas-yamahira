@@ -69,7 +69,7 @@ while read -r event file name; do
         "is_dir": '$is_dir'
     }'
     #echo $data
-    curl -k -X POST "${SUPABASE_URL}/rest/v1/files" \
+    curl -X POST "${SUPABASE_URL}/rest/v1/files" \
         -H "apikey: ${SUPABASE_APIKEY}" \
         -H "Authorization: Bearer ${SUPABASE_JWT}" \
         -H "Content-Type: application/json" \
@@ -78,7 +78,7 @@ while read -r event file name; do
 
     # イベントがMODIFYの場合、ファイルを比較し差分情報をDBに送信
     if [ "$event_type" == "MODIFY" ] || [ "$event_type" == "MOVED_FROM" ] || [ "$event_type" == "CREATE" ]; then
-        modified_full_path="${full_path//\/home\/admin/\/usr\/local\/src\/yamahira\/admin}"
+        modified_full_path="${full_path//\/home\/admin/\/usr\/local\/src\/himo\/admin}"
         directory=$(dirname "$modified_full_path")
         mkdir -p "$directory"
         if [ -e "$modified_full_path" ]; then
@@ -112,7 +112,7 @@ while read -r event file name; do
             "diff_text": "'$escaped_diff'",
             "student_id": "'$student_id'"
         }'
-        curl -k -X POST "${SUPABASE_URL}/rest/v1/diff" \
+        curl -X POST "${SUPABASE_URL}/rest/v1/diff" \
             -H "apikey: ${SUPABASE_APIKEY}" \
             -H "Authorization: Bearer ${SUPABASE_JWT}" \
             -H "Content-Type: application/json" \

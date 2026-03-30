@@ -77,7 +77,7 @@ try:
                     #print(data)
                     data_json = json.dumps(data)
                     cmd = [
-                        'curl', '-k', '-X', 'PATCH', f'{SUPABASE_LOG_COMMAND_URL}?uuid=eq.{sys.argv[2]}',
+                        'curl', '-X', 'PATCH', f'{SUPABASE_LOG_COMMAND_URL}?uuid=eq.{sys.argv[2]}',
                         '-H', f'apikey: {SUPABASE_APIKEY}',
                         '-H', f'Authorization: Bearer {SUPABASE_JWT}',
                         '-H', 'Content-Type: application/json',
@@ -97,7 +97,7 @@ try:
                     #print(data)
                     data_json = json.dumps(data)
                     cmd = [
-                        'curl', '-k', '-X', 'POST', SUPABASE_LOG_COMMAND_URL,
+                        'curl', '-X', 'POST', SUPABASE_LOG_COMMAND_URL,
                         '-H', f'apikey: {SUPABASE_APIKEY}',
                         '-H', f'Authorization: Bearer {SUPABASE_JWT}',
                         '-H', 'Content-Type: application/json',
