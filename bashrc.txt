@@ -30,8 +30,6 @@ function __accept-line() {
       READLINE_POINT=${#READLINE_LINE}
       #echo "[INFO] 複数行コマンド検出 → 1行目のみ実行: $READLINE_LINE"
     fi
-    local command_array=($READLINE_LINE)
-    local BaseCommand=${command_array[0]}
     local Command="$READLINE_LINE"
     local log_file="${BASE_DIR}/lastcommand_$$"
     unique_id=$(uuidgen)
@@ -44,7 +42,6 @@ function __accept-line() {
        echo -n "StudentID${kugiri2}$username${kugiri}"
        echo -n "GlobalIP${kugiri2}$GlobalIP${kugiri}"
        echo -n "CurrentDir${kugiri2}${PWD}${kugiri}"
-       echo -n "BaseCommand${kugiri2}$BaseCommand${kugiri}"
        echo -n "Command${kugiri2}$Command${kugiri}"
     } >${log_file}
     python3 "${BASE_DIR}/command_logger.py" $thisPID $unique_id $$

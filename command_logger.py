@@ -67,7 +67,6 @@ try:
                         'ip_addr': log_dict['GlobalIP'],
                         'path': log_dict['CurrentDir'],
                         'command': log_dict['Command'],
-                        'base_command': log_dict['BaseCommand'],
                         'output': limit_string_length(result[-1]),
                         'exit_code': log_dict['ExitCode'],
                         'uuid': sys.argv[2],
@@ -90,7 +89,6 @@ try:
                         'ip_addr': log_dict['GlobalIP'],
                         'path': log_dict['CurrentDir'],
                         'command': log_dict['Command'],
-                        'base_command': log_dict['BaseCommand'],
                         'uuid': sys.argv[2]
                     }
                     #print("-------after-------")
